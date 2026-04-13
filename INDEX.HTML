@@ -2,8 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE SNIPER | Dr. Mohamed Chouidira Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BEM Elite Mastery | Dr. Mohamed Chouidira</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,8 +12,9 @@
             --gold-linear: linear-gradient(135deg, #d4af37 0%, #f2d472 50%, #b8860b 100%);
             --gold-solid: #d4af37;
             --text-color: #ffffff;
-            --card-bg: rgba(27, 77, 62, 0.2);
             --glass-border: rgba(212, 175, 55, 0.3);
+            --correct: #2ecc71;
+            --wrong: #e74c3c;
         }
 
         body {
@@ -21,189 +22,193 @@
             color: var(--text-color);
             font-family: 'Poppins', sans-serif;
             margin: 0; overflow: hidden; height: 100vh;
+            display: flex; flex-direction: column;
         }
 
         /* شريط الأخبار العلوي */
-        .ticker { 
-            background: var(--vert-bouteille); color: var(--gold-solid); 
-            padding: 8px 0; font-size: 0.85rem; border-bottom: 2px solid var(--gold-solid);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); font-weight: 600;
-        }
-        .ticker-text { display: inline-block; white-space: nowrap; animation: move 25s linear infinite; }
+        .ticker { background: var(--vert-bouteille); color: var(--gold-solid); padding: 8px 0; font-size: 0.7rem; border-bottom: 1px solid var(--gold-solid); text-align: center; overflow: hidden; }
+        .ticker-text { display: inline-block; white-space: nowrap; animation: move 25s linear infinite; font-weight: 600; }
 
-        .app-container { display: flex; height: calc(100vh - 85px); } /* تقليل الطول لترك مساحة للفوتر */
+        .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-        /* القائمة الجانبية */
+        /* القائمة الجانبية الفخمة */
         .side-bar { 
-            width: 80px; background: rgba(27, 77, 62, 0.4); backdrop-filter: blur(15px);
+            width: 70px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); 
             display: flex; flex-direction: column; align-items: center; 
-            padding-top: 30px; border-right: 1px solid var(--glass-border); 
+            padding-top: 25px; border-right: 1px solid var(--glass-border); z-index: 10;
         }
 
-        .nav-item { 
-            font-size: 1.6rem; margin-bottom: 35px; cursor: pointer; opacity: 0.6; 
-            transition: 0.4s; filter: drop-shadow(0 0 5px transparent);
-        }
-        .nav-item:hover, .nav-item.active { 
-            opacity: 1; transform: scale(1.3); color: var(--gold-solid);
-            filter: drop-shadow(0 0 8px var(--gold-solid));
+        .nav-item { width: 45px; height: 45px; margin-bottom: 25px; cursor: pointer; filter: grayscale(1) opacity(0.5); transition: 0.4s; }
+        .nav-item svg { width: 100%; height: 100%; fill: var(--gold-solid); }
+        .nav-item.active { filter: grayscale(0) opacity(1); transform: scale(1.15); filter: drop-shadow(0 0 8px var(--gold-solid)); }
+
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; box-sizing: border-box; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; background: var(--gold-linear); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 15px 0; }
+
+        .card { background: rgba(27, 77, 62, 0.4); border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; cursor: pointer; transition: 0.3s; }
+        .card:active { transform: scale(0.97); background: rgba(27, 77, 62, 0.6); }
+        .card-icon { width: 32px; height: 32px; margin-right: 15px; fill: var(--gold-solid); }
+        .card-info h3 { margin: 0; font-size: 0.95rem; color: var(--gold-solid); }
+        .card-info span { font-size: 0.75rem; opacity: 0.7; }
+
+        /* واجهة الاختبار */
+        .quiz-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--primary-bg); z-index: 2000; display: none;
+            flex-direction: column; padding: 20px; box-sizing: border-box; justify-content: center;
         }
 
-        /* المحتوى الرئيسي */
-        .main-content { flex: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; background: var(--gold-linear); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
-
-        .badge { background: var(--gold-linear); color: black; display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
-
-        .card { 
-            background: var(--card-bg); border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; 
-            margin-bottom: 20px; display: flex; align-items: center; cursor: pointer; transition: 0.4s;
+        .score-bar { 
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px;
+            margin-bottom: 20px; border: 1px solid var(--glass-border); font-size: 0.85rem;
         }
-        .card:hover { border-color: var(--gold-solid); transform: translateY(-5px); background: rgba(27, 77, 62, 0.4); }
-        .card-icon { font-size: 2.5rem; margin-right: 20px; }
 
-        /* واجهة الكويز */
-        .quiz-view { display: none; flex-direction: column; padding: 40px; }
-        .question-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid var(--gold-solid); }
-        
-        .action-btn { 
-            padding: 12px 25px; background: var(--gold-linear); border: none; 
-            border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s;
+        .paragraph-card { 
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; 
+            border-left: 4px solid var(--gold-solid); margin-bottom: 15px; text-align: left;
         }
-        .action-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+        .translation { font-style: italic; color: #b0b0b0; font-size: 0.8rem; margin-top: 8px; display: block; direction: rtl; }
 
-        /* شريط التوقيع السفلي (المعدل) */
-        .footer-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--vert-bouteille); border-top: 1px solid var(--gold-solid);
-            padding: 12px 0; z-index: 2000; text-align: center;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+        .question-text { font-size: 1.05rem; line-height: 1.5; margin-bottom: 20px; text-align: center; }
+
+        .option-btn { 
+            width: 100%; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            color: white; border-radius: 12px; margin-top: 10px; font-size: 0.95rem; transition: 0.2s; text-align: left;
         }
-        .designer-signature {
-            font-family: 'Playfair Display', serif; font-size: 0.85rem; 
-            letter-spacing: 5px; color: var(--gold-solid); text-transform: uppercase; font-weight: 800;
-        }
+        .option-btn.correct { background: var(--correct) !important; border-color: var(--correct); font-weight: bold; }
+        .option-btn.wrong { background: var(--wrong) !important; border-color: var(--wrong); }
+
+        .footer-bar { background: var(--vert-bouteille); border-top: 1px solid var(--gold-solid); padding: 12px 0; text-align: center; }
+        .signature { font-family: 'Playfair Display', serif; font-size: 0.75rem; color: var(--gold-solid); letter-spacing: 4px; font-weight: 800; text-transform: uppercase; }
 
         @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: var(--gold-solid); border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="ticker">
-        <div class="ticker-text">🎯 BEM 2026 Preparation - The Sniper English Academy - Designed by Dr. Mohamed Chouidira 🎯</div>
+        <div class="ticker-text">🎯 BEM 2026 OFFICIAL TRAINING HUB • 200+ TASKS • DR. MOHAMED CHOUIDIRA 🎯</div>
     </div>
 
     <div class="app-container">
         <nav class="side-bar">
-            <div class="nav-item active" id="home-icon" onclick="showHome()">🏠</div>
-            <div class="nav-item" onclick="startQuiz('Term 1')">🏛️</div>
-            <div class="nav-item" onclick="startQuiz('Term 2')">🧠</div>
-            <div class="nav-item" onclick="startQuiz('Term 3')">🤝</div>
+            <div class="nav-item active" onclick="showHome()"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+            <div class="nav-item" onclick="startQuiz('Unit1')"><svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg></div>
+            <div class="nav-item" onclick="startQuiz('Unit2')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg></div>
+            <div class="nav-item" onclick="startQuiz('Unit3')"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zM8 16h8v2H8v-2zm0-4h8v2H8v-2zm5-3V3.5L18.5 9H13z"/></svg></div>
         </nav>
 
         <main class="main-content" id="home-view">
-            <div class="badge">ELITE BEM SPECIALIST</div>
-            <h1>The Sniper Academy</h1>
+            <h1>Elite Revision</h1>
+            <p style="opacity: 0.7; font-size: 0.85rem; margin-bottom: 20px;">Master the English curriculum for BEM 2026.</p>
             
-            <div class="card" onclick="startQuiz('Term 1')">
-                <div class="card-icon">🏛️</div>
-                <div><h3>Axis 1: Landmarks & Figures</h3><span>100 Questions (Titanic, Casbah, Ibn Khaldun...)</span></div>
+            <div class="card" onclick="startQuiz('Unit1')">
+                <svg class="card-icon" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                <div class="card-info"><h3>Universal Landmarks</h3><span>Itinerary & Traveling Vocabulary</span></div>
             </div>
-            <div class="card" onclick="startQuiz('Term 2')">
-                <div class="card-icon">🧠</div>
-                <div><h3>Axis 2: Childhood & Traits</h3><span>100 Questions (Used to, Grammar, Personality...)</span></div>
+            <div class="card" onclick="startQuiz('Unit2')">
+                <svg class="card-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/></svg>
+                <div class="card-info"><h3>Grammar Mastery</h3><span>Passive Voice & Equality (as...as)</span></div>
             </div>
-            <div class="card" onclick="startQuiz('Term 3')">
-                <div class="card-icon">🤝</div>
-                <div><h3>Axis 3: Citizenship & Charity</h3><span>100 Questions (Environment, Rights, Passive...)</span></div>
+            <div class="card" onclick="startQuiz('Unit3')">
+                <svg class="card-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+                <div class="card-info"><h3>Writing & Memories</h3><span>Charity, Figures & Dream Job</span></div>
             </div>
         </main>
-
-        <section class="quiz-view" id="quiz-view">
-            <h2 id="quiz-title" style="color: var(--gold-solid);">Testing...</h2>
-            <div id="quiz-container"></div>
-            <button class="action-btn" onclick="showHome()" style="background: #8b0000; color: white;">✕ EXIT QUIZ</button>
-        </section>
     </div>
 
-    <footer class="footer-bar">
-        <div class="designer-signature">DR. MOHAMED CHOUIDIRA</div>
-    </footer>
+    <div class="quiz-overlay" id="quiz-overlay">
+        <div class="score-bar">
+            <span style="color: var(--correct); font-weight: 800;">✓ <span id="c-count">0</span></span>
+            <span id="t-count" style="color: var(--gold-solid); font-weight: 800;">TASK 1/10</span>
+            <span style="color: var(--wrong); font-weight: 800;">✗ <span id="w-count">0</span></span>
+        </div>
+        <div id="quiz-box"></div>
+        <button onclick="showHome()" style="margin-top: 25px; background: none; border: 1px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 0.8rem;">END SESSION</button>
+    </div>
+
+    <footer class="footer-bar"><div class="signature">DR. MOHAMED CHOUIDIRA</div></footer>
 
     <script>
-        // بنك الأسئلة الشامل (300 سؤال)
-        const questionsDB = [];
+        const questionBank = [];
 
-        // دالة لتعبئة الأسئلة من نصوص الـ BEM (Titanic, Landmarks, figures, etc.)
-        function initDB() {
-            // Term 1: 100 Questions
-            for(let i=1; i<=100; i++) {
-                questionsDB.push({
-                    axis: "Term 1",
-                    type: "mcq",
-                    q: i === 1 ? "The Titanic sank after hitting ______." : i === 2 ? "The Titanic was sailing across the ______ Ocean." : `Question ${i}: Identify the landmark in Constantine.`,
-                    options: i === 1 ? ["a rock", "an iceberg", "a whale"] : ["Atlantic", "Pacific", "Indian"],
-                    a: i === 1 ? "an iceberg" : "Atlantic"
+        function initData() {
+            // Unit 1: Landmarks (70 Qs)
+            for(let i=0; i<70; i++) {
+                questionBank.push({
+                    u: "Unit1", q: i%2==0 ? "The Eiffel Tower is a famous universal ______." : "A detailed travel plan is called an ______.",
+                    o: i%2==0 ? ["Landmark", "Mountain", "River"] : ["Itinerary", "Map", "Ticket"], a: i%2==0 ? "Landmark" : "Itinerary"
                 });
             }
-            // Term 2: 100 Questions
-            for(let i=1; i<=100; i++) {
-                questionsDB.push({
-                    axis: "Term 2",
-                    type: "mcq",
-                    q: i === 1 ? "I ______ (play) hide and seek when I was 7." : `Question ${i}: A person who works hard is ______ .`,
-                    options: i === 1 ? ["play", "used to play", "playing"] : ["Lazy", "Active", "Shy"],
-                    a: i === 1 ? "used to play" : "Active"
+            // Unit 2: Grammar (70 Qs)
+            for(let i=0; i<70; i++) {
+                questionBank.push({
+                    u: "Unit2", q: i%2==0 ? "The Pyramids ______ (to build) in Egypt." : "Casbah is ______ old ______ the Roman ruins.",
+                    o: i%2==0 ? ["was built", "is built", "were built"] : ["as / as", "more / than", "so / that"], a: i%2==0 ? "were built" : "as / as"
                 });
             }
-            // Term 3: 100 Questions
-            for(let i=1; i<=100; i++) {
-                questionsDB.push({
-                    axis: "Term 3",
-                    type: "mcq",
-                    q: i === 1 ? "A good citizen ______ the law." : `Question ${i}: We should ______ paper and glass.`,
-                    options: i === 1 ? ["breaks", "respects", "ignores"] : ["burn", "recycle", "throw"],
-                    a: i === 1 ? "respects" : "recycle"
-                });
+            // Unit 3: Writing, Charity, Memories (60 Qs)
+            const writingSamples = [
+                {t: "Charity organizations like the Red Crescent help poor people.", tr: "الجمعيات الخيرية مثل الهلال الأحمر تساعد الفقراء.", q: "Being a good citizen means ______ others.", o:["helping","hurting","ignoring"], a:"helping"},
+                {t: "I have great memories of primary school and my kind teacher.", tr: "لدي ذكريات رائعة عن المدرسة الابتدائية ومعلمي الطيب.", q: "Synonym of 'Kind' is ______.", o:["Friendly","Mean","Angry"], a:"Friendly"},
+                {t: "My dream job is to be an engineer to build my country.", tr: "مهنة أحلامي أن أكون مهندساً لأبني وطني.", q: "'Intelligent' is a ______ adjective.", o:["long","short","irregular"], a:"long"}
+            ];
+            for(let i=0; i<60; i++) {
+                let sample = writingSamples[i%3];
+                questionBank.push({ u: "Unit3", ...sample });
             }
         }
-        initDB();
+        initData();
 
-        // دالة إظهار الهوم (مصلحة)
-        function showHome() {
-            document.getElementById('home-view').style.display = 'block';
-            document.getElementById('quiz-view').style.display = 'none';
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('home-icon').classList.add('active');
+        let currentQs = []; let currIdx = 0; let corrects = 0; let wrongs = 0; let active = true;
+
+        function showHome() { document.getElementById('quiz-overlay').style.display = 'none'; }
+
+        function startQuiz(unit) {
+            currentQs = questionBank.filter(x => x.u === unit).sort(() => 0.5 - Math.random()).slice(0, 10);
+            currIdx = 0; corrects = 0; wrongs = 0;
+            document.getElementById('quiz-overlay').style.display = 'flex';
+            render();
         }
 
-        // دالة بدء الكويز
-        function startQuiz(term) {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('quiz-view').style.display = 'flex';
-            document.getElementById('quiz-title').innerText = "Axis: " + term;
-            
-            // سحب 10 أسئلة عشوائية من الـ 100 الخاصة بالمحور
-            const filtered = questionsDB.filter(q => q.axis === term);
-            const shuffled = filtered.sort(() => 0.5 - Math.random()).slice(0, 10);
+        function render() {
+            active = true;
+            const q = currentQs[currIdx];
+            document.getElementById('c-count').innerText = corrects;
+            document.getElementById('w-count').innerText = wrongs;
+            document.getElementById('t-count').innerText = `TASK ${currIdx + 1}/10`;
             
             let html = "";
-            shuffled.forEach((q, i) => {
-                html += `
-                <div class="question-box">
-                    <p style="margin:0 0 10px 0;"><b>Question ${i+1}:</b> ${q.q}</p>
-                    <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                        ${q.options.map(opt => `<button class="action-btn" style="background:none; border:1px solid var(--gold-solid); color:white; font-size:0.9rem; padding:8px 15px;">${opt}</button>`).join('')}
-                    </div>
-                </div>`;
-            });
-            document.getElementById('quiz-container').innerHTML = html;
+            if(q.t) {
+                html += `<div class="paragraph-card"><p style="margin:0; font-size:0.9rem;">${q.t}</p><span class="translation">${q.tr}</span></div>`;
+            }
+            html += `<div class="question-text">${q.q}</div>`;
+            html += q.o.map(opt => `<button class="option-btn" onclick="check(this,'${opt}','${q.a}')">${opt}</button>`).join('');
             
-            // تحديث حالة القائمة الجانبية
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('quiz-box').innerHTML = html;
+        }
+
+        function check(btn, sel, cor) {
+            if(!active) return; active = false;
+            if(sel === cor) { btn.classList.add('correct'); corrects++; }
+            else { 
+                btn.classList.add('wrong'); wrongs++;
+                document.querySelectorAll('.option-btn').forEach(b => { if(b.innerText === cor) b.classList.add('correct'); });
+            }
+            setTimeout(() => {
+                if(currIdx < 9) { currIdx++; render(); }
+                else { finish(); }
+            }, 1500);
+        }
+
+        function finish() {
+            document.getElementById('quiz-box').innerHTML = `
+                <div style="text-align:center;">
+                    <h2 style="color:var(--gold-solid);">Session Finished!</h2>
+                    <p style="font-size:1.2rem;">Score: ${corrects} / 10</p>
+                    <button class="option-btn" style="background:var(--gold-linear); color:black; font-weight:bold; text-align:center;" onclick="showHome()">BACK TO MENU</button>
+                </div>`;
         }
     </script>
 </body>
